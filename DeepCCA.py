@@ -35,22 +35,42 @@ def train_model(model, data1, data2, epoch_num, batch_size):
 
     # best weights are saved in "temp_weights.hdf5" during training
     # it is done to return the best model based on the validation loss
-    checkpointer = ModelCheckpoint(filepath="temp_weights.h5", verbose=1, save_best_only=True, save_weights_only=True)
+    checkpointer = ModelCheckpoint(
+        filepath="temp_weights.h5",
+        verbose=1,
+        save_best_only=True,
+        save_weights_only=True,
+    )
 
     # used dummy Y because labels are not used in the loss function
-    model.fit([train_set_x1, train_set_x2], np.zeros(len(train_set_x1)),
-              batch_size=batch_size, epochs=epoch_num, shuffle=True,
-              validation_data=([valid_set_x1, valid_set_x2], np.zeros(len(valid_set_x1))),
-              callbacks=[checkpointer])
+    model.fit(
+        [train_set_x1, train_set_x2],
+        np.zeros(len(train_set_x1)),
+        batch_size=batch_size,
+        epochs=epoch_num,
+        shuffle=True,
+        validation_data=([valid_set_x1, valid_set_x2], np.zeros(len(valid_set_x1))),
+        callbacks=[checkpointer],
+    )
 
     model.load_weights("temp_weights.h5")
 
-    results = model.evaluate([test_set_x1, test_set_x2], np.zeros(len(test_set_x1)), batch_size=batch_size, verbose=1)
+    results = model.evaluate(
+        [test_set_x1, test_set_x2],
+        np.zeros(len(test_set_x1)),
+        batch_size=batch_size,
+        verbose=1,
+    )
 
-    print('loss on test data: ', results)
+    print("loss on test data: ", results)
 
-    results = model.evaluate([valid_set_x1, valid_set_x2], np.zeros(len(valid_set_x1)), batch_size=batch_size, verbose=1)
-    print('loss on validation data: ', results)
+    results = model.evaluate(
+        [valid_set_x1, valid_set_x2],
+        np.zeros(len(valid_set_x1)),
+        batch_size=batch_size,
+        verbose=1,
+    )
+    print("loss on validation data: ", results)
     return model
 
 
@@ -89,10 +109,10 @@ def test_model(model, data1, data2, outdim_size, apply_linear_cca):
 
         # Something done in the original MATLAB implementation of DCCA, do not know exactly why;)
         # it did not affect the performance significantly on the noisy MNIST dataset
-        #s = np.sign(w[0][0,:])
-        #s = s.reshape([1, -1]).repeat(w[0].shape[0], axis=0)
-        #w[0] = w[0] * s
-        #w[1] = w[1] * s
+        # s = np.sign(w[0][0,:])
+        # s = s.reshape([1, -1]).repeat(w[0].shape[0], axis=0)
+        # w[0] = w[0] * s
+        # w[1] = w[1] * s
         ###
 
         for k in range(3):
@@ -104,12 +124,12 @@ def test_model(model, data1, data2, outdim_size, apply_linear_cca):
     return new_data
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ############
     # Parameters Section
 
     # the path to save the final learned features
-    save_to = './new_features.gz'
+    save_to = "./new_features.gz"
 
     # the size of the new space learned by the model (number of the new features)
     outdim_size = 10
@@ -145,12 +165,26 @@ if __name__ == '__main__':
     # Each view is stored in a gzip file separately. They will get downloaded the first time the code gets executed.
     # Datasets get stored under the datasets folder of user's Keras folder
     # normally under [Home Folder]/.keras/datasets/
-    data1 = load_data('noisymnist_view1.gz', 'https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view1.gz')
-    data2 = load_data('noisymnist_view2.gz', 'https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view2.gz')
+    data1 = load_data(
+        "noisymnist_view1.gz",
+        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view1.gz",
+    )
+    data2 = load_data(
+        "noisymnist_view2.gz",
+        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view2.gz",
+    )
 
     # Building, training, and producing the new features by DCCA
-    model = create_model(layer_sizes1, layer_sizes2, input_shape1, input_shape2,
-                            learning_rate, reg_par, outdim_size, use_all_singular_values)
+    model = create_model(
+        layer_sizes1,
+        layer_sizes2,
+        input_shape1,
+        input_shape2,
+        learning_rate,
+        reg_par,
+        outdim_size,
+        use_all_singular_values,
+    )
     model.summary()
     model = train_model(model, data1, data2, epoch_num, batch_size)
     new_data = test_model(model, data1, data2, outdim_size, apply_linear_cca)
@@ -158,10 +192,10 @@ if __name__ == '__main__':
     # Training and testing of SVM with linear kernel on the view 1 with new features
     [test_acc, valid_acc] = svm_classify(new_data, C=0.01)
     print("Accuracy on view 1 (validation data) is:", valid_acc * 100.0)
-    print("Accuracy on view 1 (test data) is:", test_acc*100.0)
+    print("Accuracy on view 1 (test data) is:", test_acc * 100.0)
 
     # Saving new features in a gzip pickled file specified by save_to
-    print('saving new features ...')
-    f1 = gzip.open(save_to, 'wb')
+    print("saving new features ...")
+    f1 = gzip.open(save_to, "wb")
     thepickle.dump(new_data, f1)
     f1.close()

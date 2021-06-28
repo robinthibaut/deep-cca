@@ -1,0 +1,4 @@
+numpy
+tensorflow
+theano
+scikit-learn

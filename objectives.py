@@ -6,6 +6,7 @@ def cca_loss(outdim_size, use_all_singular_values):
     The main loss function (inner_cca_objective) is wrapped in this function due to
     the constraints imposed by Keras on objective functions
     """
+
     def inner_cca_objective(y_true, y_pred):
         """
         It is the loss function of CCA as introduced in the original paper. There can be other formulations.
@@ -16,11 +17,11 @@ def cca_loss(outdim_size, use_all_singular_values):
         r1 = 1e-4
         r2 = 1e-4
         eps = 1e-12
-        o1 = o2 = y_pred.shape[1]//2
+        o1 = o2 = y_pred.shape[1] // 2
 
         # unpack (separate) the output of networks for view 1 and view 2
         H1 = y_pred[:, 0:o1].T
-        H2 = y_pred[:, o1:o1+o2].T
+        H2 = y_pred[:, o1 : o1 + o2].T
 
         m = H1.shape[1]
 
@@ -61,4 +62,3 @@ def cca_loss(outdim_size, use_all_singular_values):
         return -corr
 
     return inner_cca_objective
-

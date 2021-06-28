@@ -8,9 +8,9 @@ from keras.utils.data_utils import get_file
 
 def load_data(data_file, url):
     """loads the data from the gzip pickled files, and converts to numpy arrays"""
-    print('loading data ...')
+    print("loading data ...")
     path = get_file(data_file, origin=url)
-    f = gzip.open(path, 'rb')
+    f = gzip.open(path, "rb")
     train_set, valid_set, test_set = load_pickle(f)
     f.close()
 
@@ -18,14 +18,18 @@ def load_data(data_file, url):
     valid_set_x, valid_set_y = make_numpy_array(valid_set)
     test_set_x, test_set_y = make_numpy_array(test_set)
 
-    return [(train_set_x, train_set_y), (valid_set_x, valid_set_y), (test_set_x, test_set_y)]
+    return [
+        (train_set_x, train_set_y),
+        (valid_set_x, valid_set_y),
+        (test_set_x, test_set_y),
+    ]
 
 
 def make_numpy_array(data_xy):
     """converts the input to numpy arrays"""
     data_x, data_y = data_xy
     data_x = np.asarray(data_x, dtype=theano.config.floatX)
-    data_y = np.asarray(data_y, dtype='int32')
+    data_y = np.asarray(data_y, dtype="int32")
     return data_x, data_y
 
 
@@ -38,7 +42,7 @@ def svm_classify(data, C):
     valid_data, _, valid_label = data[1]
     test_data, _, test_label = data[2]
 
-    print('training SVM...')
+    print("training SVM...")
     clf = svm.LinearSVC(C=C, dual=False)
     clf.fit(train_data, train_label.ravel())
 
@@ -61,9 +65,8 @@ def load_pickle(f):
         import _pickle as thepickle
 
     try:
-        ret = thepickle.load(f, encoding='latin1')
+        ret = thepickle.load(f, encoding="latin1")
     except TypeError:
         ret = thepickle.load(f)
 
     return ret
-

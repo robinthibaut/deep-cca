@@ -8,7 +8,7 @@ def linear_cca(H1, H2, outdim_size):
         H1 and H2: the matrices containing the data for view 1 and view 2. Each row is a sample.
         outdim_size: specifies the number of new features
     # Returns
-        A and B: the linear transformation matrices 
+        A and B: the linear transformation matrices
         mean1 and mean2: the means of data for both views
     """
     r1 = 1e-4
@@ -37,6 +37,5 @@ def linear_cca(H1, H2, outdim_size):
     V = V.T
     A = numpy.dot(SigmaHat11RootInv, U[:, 0:outdim_size])
     B = numpy.dot(SigmaHat22RootInv, V[:, 0:outdim_size])
-    D = D[0:outdim_size]
 
     return A, B, mean1, mean2
