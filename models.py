@@ -1,9 +1,10 @@
-from keras.layers import Dense, add
-from keras.models import Sequential
-
-# from keras.optimizers import RMSprop
-from keras.regularizers import l2
+from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.regularizers import l2
 from objectives import cca_loss
+
+from tensorflow.keras.layers import Dense, Dropout, Input
+from tensorflow.keras.layers import Concatenate
+from tensorflow.keras.models import Model
 
 
 def create_model(
@@ -15,45 +16,46 @@ def create_model(
     reg_par,
     outdim_size,
     use_all_singular_values,
+    dropout=None,
 ):
-    """
-    builds the whole model
-    the structure of each sub-network is defined in build_mlp_net,
-    and it can easily get substituted with a more efficient and powerful network like CNN
-    """
-    view1_model = build_mlp_net(layer_sizes1, input_size1, reg_par)
-    view2_model = build_mlp_net(layer_sizes2, input_size2, reg_par)
 
-    model = Sequential()
-    model.add(add([view1_model, view2_model], mode="concat"))
+    view1_input = Input(shape=(input_size1,), name="View1_Input")
+    view2_input = Input(shape=(input_size2,), name="View2_Input")
 
-    # model_optimizer = RMSprop(lr=learning_rate)
-    model_optimizer = "adam"
-    model.compile(
-        loss=cca_loss(outdim_size, use_all_singular_values), optimizer=model_optimizer
+    view1_model_layer = build_mlp_net(
+        layer_sizes1, reg_par, view1_input, dropout=dropout
     )
+    view2_model_layer = build_mlp_net(
+        layer_sizes2, reg_par, view2_input, dropout=dropout
+    )
+
+    merge_layer = Concatenate(name="merge_layer")(
+        [view1_model_layer, view2_model_layer]
+    )
+    model = Model(inputs=[view1_input, view2_input], outputs=merge_layer)
+
+    opt = RMSprop(lr=learning_rate)
+    model.compile(loss=cca_loss(outdim_size, use_all_singular_values), optimizer=opt)
+
+    model.summary()
 
     return model
 
 
-def build_mlp_net(layer_sizes, input_size, reg_par):
-    model = Sequential()
+def build_mlp_net(layer_sizes, reg_par, view_input_layer, dropout=None):
+
+    layer = view_input_layer
+
+    print("layer_sizes", layer_sizes)
     for l_id, ls in enumerate(layer_sizes):
-        if l_id == 0:
-            input_dim = input_size
-        else:
-            input_dim = []
+
         if l_id == len(layer_sizes) - 1:
             activation = "linear"
         else:
             activation = "sigmoid"
 
-        model.add(
-            Dense(
-                ls,
-                input_dim=input_dim,
-                activation=activation,
-                kernel_regularizer=l2(reg_par),
-            )
-        )
-    return model
+        if dropout and l_id == len(layer_sizes) - 1:
+            layer = Dropout()(layer)
+
+        layer = Dense(ls, activation=activation, kernel_regularizer=l2(reg_par))(layer)
+    return layer

@@ -2,7 +2,6 @@ import gzip
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 import numpy as np
-import theano
 from keras.utils.data_utils import get_file
 
 
@@ -28,7 +27,7 @@ def load_data(data_file, url):
 def make_numpy_array(data_xy):
     """converts the input to numpy arrays"""
     data_x, data_y = data_xy
-    data_x = np.asarray(data_x, dtype=theano.config.floatX)
+    data_x = np.asarray(data_x, dtype="float32")
     data_y = np.asarray(data_y, dtype="int32")
     return data_x, data_y
 

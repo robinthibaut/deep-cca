@@ -162,18 +162,6 @@ if __name__ == "__main__":
     # end of parameters section
     ############
 
-    # Each view is stored in a gzip file separately. They will get downloaded the first time the code gets executed.
-    # Datasets get stored under the datasets folder of user's Keras folder
-    # normally under [Home Folder]/.keras/datasets/
-    data1 = load_data(
-        "noisymnist_view1.gz",
-        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view1.gz",
-    )
-    data2 = load_data(
-        "noisymnist_view2.gz",
-        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view2.gz",
-    )
-
     # Building, training, and producing the new features by DCCA
     model = create_model(
         layer_sizes1,
@@ -185,10 +173,22 @@ if __name__ == "__main__":
         outdim_size,
         use_all_singular_values,
     )
+    model.build(input_shape=(784,))
     model.summary()
+
+    # Each view is stored in a gzip file separately. They will get downloaded the first time the code gets executed.
+    # Datasets get stored under the datasets folder of user's Keras folder
+    # normally under [Home Folder]/.keras/datasets/
+    data1 = load_data(
+        "noisymnist_view1.gz",
+        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view1.gz",
+    )
+    data2 = load_data(
+        "noisymnist_view2.gz",
+        "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view2.gz",
+    )
     model = train_model(model, data1, data2, epoch_num, batch_size)
     new_data = test_model(model, data1, data2, outdim_size, apply_linear_cca)
-
     # Training and testing of SVM with linear kernel on the view 1 with new features
     [test_acc, valid_acc] = svm_classify(new_data, C=0.01)
     print("Accuracy on view 1 (validation data) is:", valid_acc * 100.0)
