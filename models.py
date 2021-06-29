@@ -19,8 +19,8 @@ def create_model(
     dropout=None,
 ):
 
-    view1_input = Input(shape=(input_size1,), name="View1_Input")
-    view2_input = Input(shape=(input_size2,), name="View2_Input")
+    view1_input = Input(shape=(input_size1,), name="view1_input")
+    view2_input = Input(shape=(input_size2,), name="view2_input")
 
     view1_model_layer = build_mlp_net(
         layer_sizes1, reg_par, view1_input, dropout=dropout
@@ -34,10 +34,8 @@ def create_model(
     )
     model = Model(inputs=[view1_input, view2_input], outputs=merge_layer)
 
-    opt = RMSprop(lr=learning_rate)
+    opt = RMSprop(learning_rate=learning_rate)
     model.compile(loss=cca_loss(outdim_size, use_all_singular_values), optimizer=opt)
-
-    model.summary()
 
     return model
 
