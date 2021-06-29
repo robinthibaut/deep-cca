@@ -4,6 +4,8 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 from keras.utils.data_utils import get_file
 
+__all__ = ["load_data", "make_numpy_array", "svm_classify", "load_pickle"]
+
 
 def load_data(data_file, url):
     """loads the data from the gzip pickled files, and converts to numpy arrays"""

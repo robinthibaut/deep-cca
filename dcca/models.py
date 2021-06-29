@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.models import Model
 
 
-__all__ = ["create_model"]
+__all__ = ["create_model", "build_mlp_net"]
 
 
 def create_model(

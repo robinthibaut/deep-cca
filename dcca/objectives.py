@@ -1,5 +1,7 @@
 import tensorflow as tf
 
+__all__ = ["cca_loss"]
+
 
 def cca_loss(outdim_size, use_all_singular_values):
     """
@@ -21,7 +23,7 @@ def cca_loss(outdim_size, use_all_singular_values):
 
         # unpack (separate) the output of networks for view 1 and view 2
         H1 = tf.transpose(a=y_pred[:, 0:o1])
-        H2 = tf.transpose(a=y_pred[:, o1: o1 + o2])
+        H2 = tf.transpose(a=y_pred[:, o1 : o1 + o2])
 
         m = tf.shape(input=H1)[1]
 
@@ -48,11 +50,15 @@ def cca_loss(outdim_size, use_all_singular_values):
 
         posInd1 = tf.compat.v1.where(tf.greater(D1, eps))
         D1 = tf.gather_nd(D1, posInd1)  # get eigen values that are larger than eps
-        V1 = tf.transpose(a=tf.nn.embedding_lookup(params=tf.transpose(a=V1), ids=tf.squeeze(posInd1)))
+        V1 = tf.transpose(
+            a=tf.nn.embedding_lookup(params=tf.transpose(a=V1), ids=tf.squeeze(posInd1))
+        )
 
         posInd2 = tf.compat.v1.where(tf.greater(D2, eps))
         D2 = tf.gather_nd(D2, posInd2)
-        V2 = tf.transpose(a=tf.nn.embedding_lookup(params=tf.transpose(a=V2), ids=tf.squeeze(posInd2)))
+        V2 = tf.transpose(
+            a=tf.nn.embedding_lookup(params=tf.transpose(a=V2), ids=tf.squeeze(posInd2))
+        )
 
         SigmaHat11RootInv = tf.matmul(
             tf.matmul(V1, tf.linalg.tensor_diag(D1 ** -0.5)), V1, transpose_b=True
