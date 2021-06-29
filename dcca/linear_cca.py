@@ -1,5 +1,7 @@
 import numpy
 
+__all__ = ["linear_cca"]
+
 
 def linear_cca(H1, H2, outdim_size):
     """

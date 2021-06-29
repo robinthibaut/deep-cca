@@ -7,6 +7,9 @@ from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.models import Model
 
 
+__all__ = ["create_model"]
+
+
 def create_model(
     layer_sizes1,
     layer_sizes2,

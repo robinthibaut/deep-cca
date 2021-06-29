@@ -1,6 +1,6 @@
 # DCCA: Deep Canonical Correlation Analysis
 
-This is an implementation of Deep Canonical Correlation Analysis (DCCA or Deep CCA) in Python. It needs Theano and Keras libraries to be installed.
+This is an implementation of Deep Canonical Correlation Analysis (DCCA or Deep CCA) in Python.
 
 DCCA is a non-linear version of CCA which uses neural networks as the mapping functions instead of linear transformers. DCCA is originally proposed in the following paper:
 
