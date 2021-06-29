@@ -1,34 +1,33 @@
+from keras import Sequential
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.regularizers import l2
-from objectives import cca_loss
+from dcca.objectives import cca_loss
 
 from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.models import Model
 
-
-__all__ = ["create_model", "build_mlp_net"]
+__all__ = ["create_model"]
 
 
 def create_model(
-    layer_sizes1,
-    layer_sizes2,
-    input_size1,
-    input_size2,
-    learning_rate,
-    reg_par,
-    outdim_size,
-    use_all_singular_values,
-    dropout=None,
+        layer_sizes1,
+        layer_sizes2,
+        input_size1,
+        input_size2,
+        learning_rate,
+        reg_par,
+        outdim_size,
+        use_all_singular_values,
+        dropout=None,
 ):
-
     view1_input = Input(shape=(input_size1,), name="view1_input")
     view2_input = Input(shape=(input_size2,), name="view2_input")
 
-    view1_model_layer = build_mlp_net(
+    view1_model_layer = _build_mlp_net(
         layer_sizes1, reg_par, view1_input, dropout=dropout
     )
-    view2_model_layer = build_mlp_net(
+    view2_model_layer = _build_mlp_net(
         layer_sizes2, reg_par, view2_input, dropout=dropout
     )
 
@@ -43,8 +42,7 @@ def create_model(
     return model
 
 
-def build_mlp_net(layer_sizes, reg_par, view_input_layer, dropout=None):
-
+def _build_mlp_net(layer_sizes, reg_par, view_input_layer, dropout=None):
     layer = view_input_layer
 
     print("layer_sizes", layer_sizes)
