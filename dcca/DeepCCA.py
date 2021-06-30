@@ -4,12 +4,13 @@ except ImportError:
     import _pickle as thepickle
 
 import gzip
-import numpy as np
 
+import numpy as np
 from keras.callbacks import ModelCheckpoint
-from utils import load_data, svm_classify
+
 from linear_cca import linear_cca
 from models import create_model
+from utils import load_data, svm_classify
 
 
 def train_model(model, data1, data2, epoch_num, batch_size):

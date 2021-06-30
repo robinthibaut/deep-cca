@@ -23,7 +23,7 @@ def cca_loss(outdim_size, use_all_singular_values):
 
         # unpack (separate) the output of networks for view 1 and view 2
         H1 = tf.transpose(a=y_pred[:, 0:o1])
-        H2 = tf.transpose(a=y_pred[:, o1 : o1 + o2])
+        H2 = tf.transpose(a=y_pred[:, o1: o1 + o2])
 
         m = tf.shape(input=H1)[1]
 

@@ -1,10 +1,10 @@
-from tensorflow.keras.optimizers import RMSprop, SGD
-from tensorflow.keras.regularizers import l2
-from dcca.objectives import cca_loss
-
-from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.layers import Concatenate
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.regularizers import l2
+
+from dcca.objectives import cca_loss
 
 __all__ = ["create_model"]
 

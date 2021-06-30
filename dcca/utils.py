@@ -1,8 +1,9 @@
 import gzip
-from sklearn import svm
-from sklearn.metrics import accuracy_score
+
 import numpy as np
 from keras.utils.data_utils import get_file
+from sklearn import svm
+from sklearn.metrics import accuracy_score
 
 __all__ = ["load_data", "make_numpy_array", "svm_classify", "load_pickle"]
 

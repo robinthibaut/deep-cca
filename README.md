@@ -2,6 +2,11 @@
 
 I'm currently adapting the code from https://github.com/VahidooX/DeepCCA.
 
+### Objectives
+* Solving compatibility-issues with anterior version of Keras
+* Make it compatible with Tensorflow backend (remove Theano dependency)
+* Make it compatible with scikit-learn framework
+
 This is an implementation of Deep Canonical Correlation Analysis (DCCA or Deep CCA) in Python.
 
 DCCA is a non-linear version of CCA which uses neural networks as the mapping functions instead of linear transformers. DCCA is originally proposed in the following paper:
