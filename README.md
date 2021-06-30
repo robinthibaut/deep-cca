@@ -11,7 +11,7 @@ I'm currently adapting the code from https://github.com/VahidooX/DeepCCA.
 
 ## Description
 
-This is an implementation of Deep Canonical Correlation Analysis (DCCA or Deep CCA) in Python.
+This is an implementation of Deep Canonical Correlation Analysis in Python.
 
 DCCA is a non-linear version of CCA which uses neural networks as the mapping functions instead of linear transformers. DCCA is originally proposed in the following paper:
 

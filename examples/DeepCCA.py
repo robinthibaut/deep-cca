@@ -8,7 +8,7 @@ from dcca.models import create_model
 from dcca.utils import load_data, svm_classify
 
 
-def train_model(model, data1, data2, epoch_num, batch_size):
+def train_model(model, data1: list, data2: list, epoch_num: int, batch_size: int):
     """
     trains the model
     # Arguments
