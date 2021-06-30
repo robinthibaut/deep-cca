@@ -1,5 +1,4 @@
-from keras import Sequential
-from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.optimizers import RMSprop, SGD
 from tensorflow.keras.regularizers import l2
 from dcca.objectives import cca_loss
 
@@ -36,7 +35,8 @@ def create_model(
     )
     model = Model(inputs=[view1_input, view2_input], outputs=merge_layer)
 
-    opt = RMSprop(learning_rate=learning_rate)
+    # opt = RMSprop(learning_rate=learning_rate)
+    opt = SGD(learning_rate=learning_rate)
     model.compile(loss=cca_loss(outdim_size, use_all_singular_values), optimizer=opt)
 
     return model
@@ -51,7 +51,7 @@ def _build_mlp_net(layer_sizes, reg_par, view_input_layer, dropout=None):
         if l_id == len(layer_sizes) - 1:
             activation = "linear"
         else:
-            activation = "sigmoid"
+            activation = "relu"
 
         if dropout and l_id == len(layer_sizes) - 1:
             layer = Dropout()(layer)
