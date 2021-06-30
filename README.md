@@ -7,6 +7,7 @@ I'm currently adapting the code from https://github.com/VahidooX/DeepCCA.
 * ~~Make it compatible with Tensorflow backend (remove Theano dependency)~~
 * Make it compatible with scikit-learn framework
 * Currently, the code is designed to solve a classification problem - I'm interested in solving regression problems
+* Figure out how to back-transform the data that went through the NN layers to their original space.
 
 ## Description
 
