@@ -1,12 +1,5 @@
 import os
 
-try:
-    import cPickle as thepickle
-except ImportError:
-    import _pickle as thepickle
-
-import gzip
-
 import numpy as np
 from keras.callbacks import ModelCheckpoint
 
@@ -39,7 +32,7 @@ def train_model(model, data1, data2, epoch_num, batch_size):
     # best weights are saved in "temp_weights.hdf5" during training
     # it is done to return the best model based on the validation loss
     checkpointer = ModelCheckpoint(
-        filepath="temp_weights.h5",
+        filepath=os.path.join(os.getcwd(), "examples", "temp_weights.h5"),
         verbose=1,
         save_best_only=True,
         save_weights_only=True,
@@ -47,8 +40,8 @@ def train_model(model, data1, data2, epoch_num, batch_size):
 
     # used dummy Y because labels are not used in the loss function
     model.fit(
-        [train_set_x1, train_set_x2],
-        np.zeros(len(train_set_x1)),
+        x=[train_set_x1, train_set_x2],
+        y=np.zeros(len(train_set_x1)),
         batch_size=batch_size,
         epochs=epoch_num,
         shuffle=True,
@@ -56,11 +49,11 @@ def train_model(model, data1, data2, epoch_num, batch_size):
         callbacks=[checkpointer],
     )
 
-    model.load_weights("temp_weights.h5")
+    model.load_weights(os.path.join(os.getcwd(), "examples", "temp_weights.h5"))
 
     results = model.evaluate(
-        [test_set_x1, test_set_x2],
-        np.zeros(len(test_set_x1)),
+        x=[test_set_x1, test_set_x2],
+        y=np.zeros(len(test_set_x1)),
         batch_size=batch_size,
         verbose=1,
     )
@@ -68,8 +61,8 @@ def train_model(model, data1, data2, epoch_num, batch_size):
     print("loss on test data: ", results)
 
     results = model.evaluate(
-        [valid_set_x1, valid_set_x2],
-        np.zeros(len(valid_set_x1)),
+        x=[valid_set_x1, valid_set_x2],
+        y=np.zeros(len(valid_set_x1)),
         batch_size=batch_size,
         verbose=1,
     )
@@ -77,7 +70,7 @@ def train_model(model, data1, data2, epoch_num, batch_size):
     return model
 
 
-def test_model(model, data1, data2, outdim_size, apply_linear_cca):
+def test_model(model, data1: list, data2: list, outdim_size: int, apply_linear_cca: bool):
     """produce the new features by using the trained model
     # Arguments
         model: the trained model
@@ -130,10 +123,6 @@ def test_model(model, data1, data2, outdim_size, apply_linear_cca):
 if __name__ == "__main__":
     ############
     # Parameters Section
-
-    # the path to save the final learned features
-
-    save_to = os.path.join(os.getcwd(), "new_features.gz")
 
     # the size of the new space learned by the model (number of the new features)
     outdim_size = 10
@@ -192,7 +181,7 @@ if __name__ == "__main__":
         "https://www2.cs.uic.edu/~vnoroozi/noisy-mnist/noisymnist_view2.gz",
     )
     model = train_model(model, data1, data2, epoch_num, batch_size)
-    new_data = test_model(model, data1, data2, outdim_size, apply_linear_cca)
+    new_data = np.array(test_model(model, data1, data2, outdim_size, apply_linear_cca), dtype="object")
     # Training and testing of SVM with linear kernel on the view 1 with new features
     [test_acc, valid_acc] = svm_classify(new_data, C=0.01)
     print("Accuracy on view 1 (validation data) is:", valid_acc * 100.0)
@@ -200,6 +189,6 @@ if __name__ == "__main__":
 
     # Saving new features in a gzip pickled file specified by save_to
     print("saving new features ...")
-    f1 = gzip.open(save_to, "wb")
-    thepickle.dump(new_data, f1)
-    f1.close()
+    # the path to save the final learned features
+    save_to = os.path.join(os.getcwd(), "examples", "new_features.npy")
+    np.save(save_to, new_data)

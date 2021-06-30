@@ -20,6 +20,7 @@ Galen Andrew, Raman Arora, Jeff Bilmes, Karen Livescu, "[Deep Canonical Correlat
 It uses the Keras library with the Tensorflow backend.
 
 ### Differences with the original paper
+
 The following are the differences between this implementation and the original paper:
 
  * The non-saturating version of sigmoid is substituted by another non-saturating activation function (ReLU).

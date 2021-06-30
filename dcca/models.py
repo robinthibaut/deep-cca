@@ -42,10 +42,9 @@ def create_model(
     return model
 
 
-def _build_mlp_net(layer_sizes, reg_par, view_input_layer, dropout=None):
+def _build_mlp_net(layer_sizes: list, reg_par: float, view_input_layer, dropout=None):
     layer = view_input_layer
 
-    print("layer_sizes", layer_sizes)
     for l_id, ls in enumerate(layer_sizes):
 
         if l_id == len(layer_sizes) - 1:

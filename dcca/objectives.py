@@ -11,9 +11,7 @@ def cca_loss(outdim_size, use_all_singular_values):
 
     def inner_cca_objective(y_true, y_pred):
         """
-        It is the loss function of CCA as introduced in the original paper. There can be other formulations.
-        It is implemented on Tensorflow based on github@VahidooX's cca loss on Theano.
-        y_true is just ignored
+        It is the loss function of CCA as introduced in the original paper.
         """
 
         r1 = 1e-4
