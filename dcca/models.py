@@ -1,7 +1,7 @@
 from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, RMSprop
 from tensorflow.keras.regularizers import l2
 
 from dcca.objectives import cca_loss
@@ -18,7 +18,7 @@ def create_model(
         reg_par,
         outdim_size,
         use_all_singular_values,
-        dropout=None,
+        dropout=False,
 ):
     view1_input = Input(shape=(input_size1,), name="view1_input")
     view2_input = Input(shape=(input_size2,), name="view2_input")
@@ -42,7 +42,7 @@ def create_model(
     return model
 
 
-def _build_mlp_net(layer_sizes: list, reg_par: float, view_input_layer, dropout=None):
+def _build_mlp_net(layer_sizes: list, reg_par: float, view_input_layer, dropout: bool = False):
     layer = view_input_layer
 
     for l_id, ls in enumerate(layer_sizes):
@@ -51,9 +51,10 @@ def _build_mlp_net(layer_sizes: list, reg_par: float, view_input_layer, dropout=
             activation = "linear"
         else:
             activation = "relu"
-
-        if dropout and l_id == len(layer_sizes) - 1:
-            layer = Dropout()(layer)
+        # if dropout and l_id == len(layer_sizes) - 1:
+        #     layer = Dropout(rate=0.5)(layer)
+        if dropout and l_id != 0:
+            layer = Dropout(rate=0.5)(layer)
 
         layer = Dense(ls, activation=activation, kernel_regularizer=l2(reg_par))(layer)
     return layer
