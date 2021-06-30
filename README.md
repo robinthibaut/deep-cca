@@ -6,6 +6,9 @@ I'm currently adapting the code from https://github.com/VahidooX/DeepCCA.
 * Solving compatibility-issues with anterior version of Keras
 * Make it compatible with Tensorflow backend (remove Theano dependency)
 * Make it compatible with scikit-learn framework
+* Currently, the code is designed to solve a classification problem - I'm interested in solving regression problems
+
+## Description
 
 This is an implementation of Deep Canonical Correlation Analysis (DCCA or Deep CCA) in Python.
 
