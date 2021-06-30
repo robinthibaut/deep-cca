@@ -1,3 +1,5 @@
+import os
+
 try:
     import cPickle as thepickle
 except ImportError:
@@ -8,9 +10,9 @@ import gzip
 import numpy as np
 from keras.callbacks import ModelCheckpoint
 
-from linear_cca import linear_cca
-from models import create_model
-from utils import load_data, svm_classify
+from dcca.linear_cca import linear_cca
+from dcca.models import create_model
+from dcca.utils import load_data, svm_classify
 
 
 def train_model(model, data1, data2, epoch_num, batch_size):
@@ -130,7 +132,8 @@ if __name__ == "__main__":
     # Parameters Section
 
     # the path to save the final learned features
-    save_to = "./new_features.gz"
+
+    save_to = os.path.join(os.getcwd(), "new_features.gz")
 
     # the size of the new space learned by the model (number of the new features)
     outdim_size = 10
