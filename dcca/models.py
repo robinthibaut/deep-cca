@@ -36,7 +36,7 @@ def create_model(
     model = Model(inputs=[view1_input, view2_input], outputs=merge_layer)
 
     # opt = RMSprop(learning_rate=learning_rate)
-    opt = SGD(learning_rate=learning_rate)
+    opt = SGD(learning_rate=learning_rate, momentum=0.9, nesterov=True)
     model.compile(loss=cca_loss(outdim_size, use_all_singular_values), optimizer=opt)
 
     return model
